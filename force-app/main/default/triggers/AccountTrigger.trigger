@@ -1,8 +1,5 @@
 trigger AccountTrigger on Account (before insert, after insert) {
-    system.debug('Account trigger::: ' + Trigger.operationType);
-    system.debug(Trigger.new);
-    
-    if (Trigger.isBefore) {
+if (Trigger.isBefore) {
         if (Trigger.isInsert){
             for (Account acct : Trigger.new){
                 if (acct.Type == null) {
