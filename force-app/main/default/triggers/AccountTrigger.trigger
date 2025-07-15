@@ -8,12 +8,16 @@ if (Trigger.isBefore) {
             if (acct.Type == null) {
             acct.Type = 'Prospect';
             }
-            if (acct.ShippingAddress != null) {
-                acct.ShippingStreet = acct.BillingStreet;
-                acct.ShippingCity = acct.BillingCity;
-                acct.ShippingState = acct.BillingState;
-                acct.ShippingPostalCode = acct.BillingPostalCode;
-                acct.ShippingCountry = acct.BillingCountry; 
+            if (acct.ShippingStreet != null &&
+                acct.ShippingCity != null &&
+                acct.ShippingState != null &&
+                acct.ShippingPostalCode != null &&
+                acct.ShippingCountry != null) {
+                acct.BillingStreet = acct.ShippingStreet;
+                acct.BillingCity = acct.ShippingCity;
+                acct.BillingState = acct.ShippingState;
+                acct.BillingPostalCode = acct.ShippingPostalCode;
+                acct.BillingCountry = acct.ShippingCountry; 
             }
             if (acct.Phone != null && acct.Website != null && acct.Fax != null) {
                 acct.Rating = 'Hot';
