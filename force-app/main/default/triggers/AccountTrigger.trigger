@@ -1,7 +1,7 @@
 trigger AccountTrigger on Account (before insert, after insert) {
 if (Trigger.isBefore) {
         if (Trigger.isInsert){
-            for (Account acct : Trigger.new){
+            for (Account acct : Trigger.new) {
                 if (acct.Type == null) {
                     acct.Type = 'Prospect';
                 }
@@ -25,7 +25,7 @@ if (Trigger.isBefore) {
     List<Contact> newContacts = new List<Contact>();
     if (Trigger.isAfter) {
         if (Trigger.isInsert){
-            for (Account acct : Trigger.new){
+            for (Account acct : Trigger.new) {
                 newContacts.add(new Contact(
                     AccountId = acct.Id,
                 LastName = 'DefaultContact',
