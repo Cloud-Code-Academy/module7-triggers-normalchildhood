@@ -31,11 +31,11 @@ trigger OpportunityTrigger on Opportunity (before update, after update, before d
             for (Opportunity opp : Trigger.new) {
                 Contact contCEO = ceoContacts.get(opp.AccountId);
                 Opportunity updatedOpp = new Opportunity();
-                Id = opp.Id;
-                Primary_Contact_c = contCEO.Id;
+                updatedOpp.Id = opp.Id;
+                updatedOpp.Primary_Contact__c = contCEO.Id;
+                oppsToUpdate.add(updatedOpp);
             }
-            oppsToUpdate.add(updatedOpp);
+            update oppsToUpdate;
         }
-        update oppsToUpdate;
     }
 }
