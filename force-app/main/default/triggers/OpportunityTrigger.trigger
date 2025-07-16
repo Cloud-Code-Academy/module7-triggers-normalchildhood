@@ -1,18 +1,10 @@
-trigger OpportunityTrigger on Opportunity (before insert) {
-if (Trigger.isBefore) {
+trigger OpportunityTrigger on Opportunity (before update, after update, before delete) {
+    if (Trigger.isBefore) {
         if (Trigger.isUpdate){
             for (Opportunity opp : Trigger.new) {
                 if (opp.Amount <= 5000) {
-                   opp.addError('Opportunity amount must be greater than 5000');
+                    opp.addError('Opportunity amount must be greater than 5000');
                 }
-            }
-        }
-    }
-    //List<Contact> newContacts = new List<Contact>();
-    if (Trigger.isAfter) {
-        if (Trigger.IsUpdate) {
-            for (Opportunity opp : Trigger.new) {
-
             }
         }
         if (Trigger.isDelete) {
@@ -23,6 +15,27 @@ if (Trigger.isBefore) {
             }
         }
     }
+    if (Trigger.isAfter) {
+        if (Trigger.IsUpdate) {
+            Set<Id> acctIds = new Set<Id> ();
+            for (Opportunity opp : Trigger.new) {
+                acctIds.add(opp.accountId);
+            }
+            Map<Id, Contact> ceoContacts = new Map<Id, Contact> ();
+            for (Contact cont : [SELECT Id, AccountId 
+                                FROM Contact 
+                                WHERE Title = 'CEO' AND AccountId IN :acctIds ]) {
+                ceoContacts.put(cont.AccountId, cont);
+            }
+            List<Opportunity> oppsToUpdate = new List<Opportunity> ();
+            for (Opportunity opp : Trigger.new) {
+                Contact contCEO = ceoContacts.get(opp.AccountId);
+                Opportunity updatedOpp = new Opportunity();
+                Id = opp.Id;
+                Primary_Contact_c = contCEO.Id;
+            }
+            oppsToUpdate.add(updatedOpp);
+        }
+        update oppsToUpdate;
+    }
 }
-/*When an opportunity is updated set the primary contact on the opportunity to the contact on the same account with the title of 'CEO'.
-    * Trigger should only fire on update.*/

@@ -9,7 +9,7 @@ if (Trigger.isBefore) {
                     acct.ShippingCity != null &&
                     acct.ShippingState != null &&
                     acct.ShippingPostalCode != null &&
-                acct.ShippingCountry != null) {
+                    acct.ShippingCountry != null) {
                     acct.BillingStreet = acct.ShippingStreet;
                     acct.BillingCity = acct.ShippingCity;
                     acct.BillingState = acct.ShippingState;
