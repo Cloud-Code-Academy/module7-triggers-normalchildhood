@@ -42,15 +42,14 @@ trigger OpportunityTrigger on Opportunity (before update, after update, before d
                     if (opp.Primary_Contact__c == contCEO.Id) { //checks if contact already matches and stops if it does; otherwise continuous loop of updates
                         continue;
                     }
-                    else {
-                        Opportunity updatedOpp = new Opportunity();
-                        updatedOpp.Id = opp.Id;
-                        updatedOpp.Primary_Contact__c = contCEO.Id;
-                        oppsToUpdate.add(updatedOpp);
-                    }
-                    
+                    Opportunity updatedOpp = new Opportunity();
+                    updatedOpp.Id = opp.Id;
+                    updatedOpp.Primary_Contact__c = contCEO.Id;
+                    oppsToUpdate.add(updatedOpp);
                 }
-                update oppsToUpdate;
+                if (!oppsToUpdate.isEmpty()) {
+                    update oppsToUpdate;
+                }
             }
         }
     }
