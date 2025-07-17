@@ -7,6 +7,7 @@ trigger OpportunityTrigger on Opportunity (before update, after update, before d
                 }
             }
         }
+    }
         if (Trigger.isDelete) {
             Set<Id> acctIds = new Set<Id>();
             for (Opportunity opp : Trigger.old) {
@@ -28,8 +29,8 @@ trigger OpportunityTrigger on Opportunity (before update, after update, before d
                 }
                 Map<Id, Contact> ceoContacts = new Map<Id, Contact> ();
                 for (Contact cont : [SELECT Id, AccountId 
-                                FROM Contact 
-                                WHERE Title = 'CEO' AND AccountId IN :acctIds ]) {
+                                    FROM Contact 
+                                    WHERE Title = 'CEO' AND AccountId IN :acctIds ]) {
                     ceoContacts.put(cont.AccountId, cont); //this loop adds each contact that fits the query into a map with the acct id & contact
                 }
                 List<Opportunity> oppsToUpdate = new List<Opportunity> ();
@@ -42,15 +43,15 @@ trigger OpportunityTrigger on Opportunity (before update, after update, before d
                     if (opp.Primary_Contact__c == contCEO.Id) { //checks if contact already matches and stops if it does; otherwise continuous loop of updates
                         continue;
                     }
-                    Opportunity updatedOpp = new Opportunity();
-                    updatedOpp.Id = opp.Id;
-                    updatedOpp.Primary_Contact__c = contCEO.Id;
-                    oppsToUpdate.add(updatedOpp);
+                    oppsToUpdate.add(new Opportunity(
+                        Id = opp.Id,
+                    Primary_Contact__c = contCEO.Id
+                        ));
                 }
+                
                 if (!oppsToUpdate.isEmpty()) {
                     update oppsToUpdate;
                 }
             }
         }
     }
-}
