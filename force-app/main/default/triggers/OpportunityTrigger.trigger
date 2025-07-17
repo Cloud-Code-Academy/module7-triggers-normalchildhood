@@ -36,6 +36,9 @@ trigger OpportunityTrigger on Opportunity (before update, after update, before d
                 //this loop goes through each opp that was updated and adds the id to the list to update & updates the primary contact with one from the map
                 for (Opportunity opp : Trigger.new) {
                     Contact contCEO = ceoContacts.get(opp.AccountId); //this sets the contact to be the one from the map that matches the acct id that's on the opp
+                    if (contCEO == null) { //checks if there is no CEO contact
+                        continue;
+                    }
                     if (opp.Primary_Contact__c == contCEO.Id) { //checks if contact already matches and stops if it does; otherwise continuous loop of updates
                         continue;
                     }
